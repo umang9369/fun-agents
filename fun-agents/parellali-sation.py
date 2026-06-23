@@ -76,3 +76,8 @@ def parallelization_workflow(topic: str):
 
 #invoking the function
 
+topic = input("Enter a topic for a joke: ")
+# Invoke
+stream = parallelization_workflow.stream_events(topic, version="v3")
+for snapshot in stream.values:
+    print(snapshot)
