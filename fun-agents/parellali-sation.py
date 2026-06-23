@@ -52,6 +52,27 @@ def call_llm_3(topic):
     msg = llm.invoke(f"Write a poem about {topic}")
     return msg.content
 
+#this is the aggregator function that will combine the joke and story into a single output
+
+@task
+def aggregator(topic, joke, story, poem):
+    """Combine the joke and story into a single output"""
+
+    combined = f"Here's a story, joke, and poem about {topic}!\n\n"
+    combined += f"STORY:\n{story}\n\n"
+    combined += f"JOKE:\n{joke}\n\n"
+    combined += f"POEM:\n{poem}"
+    return combined
+
+#build workflow
+
+@entrypoint()
+def parallelization_workflow(topic: str):
+    joke_fut = call_llm_1(topic)
+    story_fut = call_llm_2(topic)
+    poem_fut= call_llm_3(topic)
+    return aggregator(topic, joke_fut.result(), story_fut.result(), poem_fut.result()).result()
 
 
+#invoking the function
 
